@@ -8,7 +8,7 @@ from datetime import datetime
 
 @app.route('/')
 @app.route('/index')
-@login_required
+# @login_required
 def index():
     posts = [
         {
