@@ -13,7 +13,7 @@
     {% if current_user.is_anonymous %}
     <p><h2>Скорее <a href="{{ url_for('register') }}">регистрируйся</a> и выведи свой бизнес на новый уровень!</h2></p>
     {% else %}
-    <p><h2>{{ current_user.username }}, я смотрю ты уже залогинен! <a href="{{ url_for('index') }}">Перейти к учёту клиентов</a></h2></p>
+    <p><h2>{{ current_user.username }}, я смотрю ты уже залогинен! <a href="{{ url_for('clients_manager') }}">Перейти к учёту клиентов</a></h2></p>
     {% endif %}
 
 {% endblock %}

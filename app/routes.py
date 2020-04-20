@@ -96,7 +96,7 @@ def edit_profile():
 def add_client():
     form = AddForm(current_user.username)
     if form.validate_on_submit():
-        cl = Client(fio = form.fio.data, tovar = form.tovar.data, price = form.price.data, address = form.address.data, cost_price = form.cost_price.data, profit = form.profit.data, track = form.track.data, status = form.status.data, author = current_user)
+        cl = Client(fio = form.fio.data, tovar = form.tovar.data, price = form.price.data, address = form.address.data, cost_price = form.cost_price.data, profit = form.profit.data, track = form.track.data, status = form.status.data, user_id = current_user.id)
         db.session.add(cl)
         db.session.commit()
         flash('Your changes have been saved.')

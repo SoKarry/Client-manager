@@ -45,7 +45,7 @@ class Client(db.Model):
     status = db.Column(db.String(40))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self):
-        return '<Client {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(self.id, self.timestamp, self.fio, self.tovar, self.price, self.address, self.cost_price, self.profit, self.track)
+        return '<Client {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(self.id, self.timestamp, self.fio, self.tovar, self.price, self.address, self.cost_price, self.profit, self.track, self.status)
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
