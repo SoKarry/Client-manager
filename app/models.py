@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    clients = db.relationship('Client', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -31,6 +32,20 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    fio = db.Column(db.String(90))
+    tovar = db.Column(db.String(140))
+    price = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String(140))
+    cost_price = db.Column(db.Integer, primary_key=True)
+    profit = db.Column(db.Integer, primary_key=True)
+    track = db.Column(db.String(20))
+    status = db.Column(db.String(40))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    def __repr__(self):
+        return '<Client {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(self.id, self.timestamp, self.fio, self.tovar, self.price, self.address, self.cost_price, self.profit, self.track)
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
