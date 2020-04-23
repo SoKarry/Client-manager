@@ -94,7 +94,7 @@ def edit_profile():
 @app.route('/clients_manager', methods=['GET', 'POST'])
 @login_required
 def add_client():
-    form = AddForm(current_user.username)
+    form = AddForm()
     if form.validate_on_submit():
         cl = Client(fio = form.fio.data, tovar = form.tovar.data, price = form.price.data, address = form.address.data, cost_price = form.cost_price.data, profit = form.profit.data, track = form.track.data, status = form.status.data, user_id = current_user.id)
         db.session.add(cl)

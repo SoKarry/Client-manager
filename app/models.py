@@ -37,15 +37,15 @@ class Client(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     fio = db.Column(db.String(90))
     tovar = db.Column(db.String(140))
-    price = db.Column(db.Integer, primary_key=True)
+    price = db.Column(db.Integer)
     address = db.Column(db.String(140))
-    cost_price = db.Column(db.Integer, primary_key=True)
-    profit = db.Column(db.Integer, primary_key=True)
+    cost_price = db.Column(db.Integer)
+    profit = db.Column(db.Integer)
     track = db.Column(db.String(20))
     status = db.Column(db.String(40))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self):
-        return '<Client {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(self.id, self.timestamp, self.fio, self.tovar, self.price, self.address, self.cost_price, self.profit, self.track, self.status)
+        return '<Client {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(self.timestamp, self.fio, self.tovar, self.price, self.address, self.cost_price, self.profit, self.track, self.status)
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
