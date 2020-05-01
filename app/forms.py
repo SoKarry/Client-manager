@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FloatField, SelectField, RadioField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-from app.models import User, Client
+from app.models import User, Lead
 
 class LoginForm(FlaskForm):
     username = StringField('Логин', validators=[DataRequired()])
@@ -27,9 +27,9 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Пожалуйста, используйте другой email-адрес.')
 
 class EditProfileForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
-    submit = SubmitField('Submit')
+    username = StringField('Логин', validators=[DataRequired()])
+    about_me = TextAreaField('Для заметок: ', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Изменить!')
 
     def __init__(self, original_username, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
@@ -39,15 +39,23 @@ class EditProfileForm(FlaskForm):
         if username.data != self.original_username:
             user = User.query.filter_by(username=self.username.data).first()
             if user is not None:
-                raise ValidationError('Please use a different username.')
+                raise ValidationError('Пожалуйста, используйте другой логин.')
 
 class AddForm(FlaskForm):
     fio = StringField('ФИО', validators=[DataRequired(), Length(min=1, max=140)])
-    tovar = StringField('Товар', validators=[DataRequired(), Length(min=1, max=140)])
-    price = IntegerField('Цена', validators=[DataRequired()])
-    address = StringField('Адрес', validators=[Length(min=0, max=140)])
-    cost_price = IntegerField('Себестоимость', validators=[DataRequired()])
-    profit = IntegerField('Прибыль', validators=[DataRequired()])
+    tovar = SelectField(u'Товар')
+    price = FloatField('Цена')
+    address = StringField('Адрес', validators=[DataRequired(), Length(min=0, max=140)])
+    delivery_price = FloatField('Стоимость доставки', validators=[DataRequired()])
+    cost_price = FloatField('Себестоимость')
+    contact = StringField('Контакты', validators=[DataRequired(), Length(min=0, max=140)])
     track = StringField('Трек', validators=[Length(min=0, max=20)])
     status = StringField('Статус', validators=[Length(min=0, max=40)])
+    who_paid = RadioField('Оплата доставки', choices=[('0','Покупатель'),('1','Мы')])
+    submit = SubmitField('✔')
+
+class AddTovarForm(FlaskForm):
+    tovar_name = StringField('Товар', validators=[DataRequired(), Length(min=1, max=140)])
+    tovar_cost_price = FloatField('Себестоимость', validators=[DataRequired()])
+    tovar_price = FloatField('Цена', validators=[DataRequired()])
     submit = SubmitField('✔')

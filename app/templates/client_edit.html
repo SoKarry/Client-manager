@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <center><h1>Учёт клиентов</h1></center>
+    <center><h1>Правка заявки</h1></center>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <hr />
@@ -26,6 +26,16 @@
                 </select>
 			</div>
 			<div class="col">
+				{{ form.price.label(class="form-control-label") }}
+                    {% if form.price.errors %}
+                        {{ form.price(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.price(class="form-control") }}
+                    {% endif %}
+			</div>
+			<div class="col">
 				{{ form.address.label(class="form-control-label") }}
                     {% if form.address.errors %}
                         {{ form.address(class="form-control is-invalid") }}
@@ -43,6 +53,16 @@
                         </div>
                     {% else %}
                         {{ form.delivery_price(class="form-control") }}
+                    {% endif %}
+			</div>
+			<div class="col">
+				{{ form.cost_price.label(class="form-control-label") }}
+                    {% if form.cost_price.errors %}
+                        {{ form.cost_price(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.cost_price(class="form-control") }}
                     {% endif %}
 			</div>
 			<div class="col">
@@ -75,58 +95,23 @@
                         {{ form.status(class="form-control") }}
                     {% endif %}
 			</div>
-            <div class="col">
-                <label>Оплата доставки</label>
-                {% for lead in form.who_paid.choices %}
-                <div class="form-check">
-                    <input name="who_paid" class="form-check-input" type="radio" id="{{ lead[0] }}" value="{{ lead[0] }}">
-                    <label class="form-check-label" for="{{ lead[0] }}">{{ lead[1] }}</label>
-                </div>
-                {% endfor %}
-            </div>
+<!--            <div class="col">-->
+<!--                <label>Оплата доставки</label>-->
+<!--                <div class="form-check">-->
+<!--                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">-->
+<!--                  <label class="form-check-label" for="exampleRadios1">Покупатель</label>-->
+<!--                </div>-->
+<!--                <div class="form-check">-->
+<!--                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" checked>-->
+<!--                  <label class="form-check-label" for="exampleRadios2">Мы</label>-->
+<!--                </div>-->
+<!--            </div>-->
                 <H5 style="margin-top: 2.5%">{{ form.submit() }}</H5>
 			</div>
         <hr />
 	  </div>
 	</form>
-        <p>
-        <table id="table-id" border="1" width="100%" cellpadding="5">
-            <thead>
-                <tr>
-                    <th data-sort-default>Дата</th>
-                    <th>ФИО</th>
-                    <th>Товар</th>
-                    <th>Цена</th>
-                    <th>Контакты</th>
-                    <th>Адрес</th>
-                    <th>Доставка</th>
-                    <th>Себестоимость</th>
-                    <th>Прибыль</th>
-                    <th>Трек</th>
-                    <th>Статус</th>
-                    <th>Ред.</th>
-                    <th>Del</th>
-                </tr>
-            </thead>
-        {% for lead in current_user.leads %}
-            <tr>
-                <td>{{ lead.timestamp.strftime("%d.%m.%Y") }}</td>
-                <td>{{ lead.fio }}</td>
-                <td>{{ lead.tovar }}</td>
-                <td>{{ lead.price }}</td>
-                <td>{{ lead.contact }}</td>
-                <td>{{ lead.address }}</td>
-                <td>{{ lead.delivery_price }}</td>
-                <td>{{ lead.cost_price }}</td>
-                <td>{{ lead.profit }}</td>
-                <td><a target="_blank" href="https://t.17track.net/ru#nums={{ lead.track }}">{{ lead.track }}</a></td>
-                <td>{{ lead.status }}</td>
-                <td><a href="{{ url_for('update_lead', lead_id=lead.id) }}">✎</a></td>
-                <td><a href="{{ url_for('delete_lead', lead_id=lead.id) }}">❌</a></td>
-            </tr>
-        {% endfor %}
-        </table>
+    <p>
+        <a class="btn btn-secondary" href="{{ url_for('add_client') }}">⇐ Назад к менеждеру клиентов</a>
     </p>
-
-<script>new Tablesort(document.getElementById('table-id'));</script>
 {% endblock %}

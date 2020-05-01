@@ -1,25 +1,15 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddForm
-from app.models import User, Client
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddForm, AddTovarForm
+from app.models import User, Lead, Tovar
 from datetime import datetime
 
 @app.route('/')
 @app.route('/index')
 def index():
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html', title='Home', posts=posts)
+    return render_template('index.html', title='Home')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -95,10 +85,102 @@ def edit_profile():
 @login_required
 def add_client():
     form = AddForm()
+    form.tovar.choices = [(x.tovar_name, x.tovar_name) for x in current_user.tovars]
     if form.validate_on_submit():
-        cl = Client(fio = form.fio.data, tovar = form.tovar.data, price = form.price.data, address = form.address.data, cost_price = form.cost_price.data, profit = form.profit.data, track = form.track.data, status = form.status.data, user_id = current_user.id)
-        db.session.add(cl)
+        ld = Lead(fio = form.fio.data, tovar = request.form.get('tovar'), price = Tovar.query.filter_by(tovar_name=request.form.get('tovar'), user_id=current_user.id).first().tovar_price, contact = form.contact.data, address = form.address.data, delivery_price=form.delivery_price.data, cost_price = Tovar.query.filter_by(tovar_name=request.form.get('tovar'), user_id=current_user.id).first().tovar_cost_price, profit = Tovar.query.filter_by(tovar_name=request.form.get('tovar'), user_id=current_user.id).first().tovar_price - Tovar.query.filter_by(tovar_name=request.form.get('tovar'), user_id=current_user.id).first().tovar_cost_price - form.delivery_price.data*int(request.form.get('who_paid')), track = form.track.data, status = form.status.data, user_id = current_user.id)
+        db.session.add(ld)
         db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('index'))
+        flash('Клиент успешно добавлен!')
+        return redirect(url_for('add_client'))
     return render_template('clients_manager.html', title='Учёт кленитов', form=form)
+
+@app.route("/client_edit/<int:lead_id>", methods=['GET', 'POST'])
+@login_required
+def update_lead(lead_id):
+    lead = Lead.query.get_or_404(lead_id)
+    if lead.author != current_user:
+        abort(403)
+    form = AddForm()
+    form.tovar.choices = [(x.tovar_name, x.tovar_name) for x in current_user.tovars]
+    form.tovar.default = lead.tovar
+    if form.validate_on_submit():
+        lead.fio = form.fio.data
+        # lead.tovar = request.form.get('tovar')
+        lead.price = form.price.data
+        lead.contact = form.contact.data
+        lead.address = form.address.data
+        lead.delivery_price = form.delivery_price.data
+        lead.cost_price = form.cost_price.data
+        lead.profit = form.price.data-form.cost_price.data
+        lead.track = form.track.data
+        lead.status = form.status.data
+        db.session.commit()
+        flash('Клиент отредактирован!', 'success')
+        return redirect(url_for('add_client'))
+    elif request.method == 'GET':
+        form.fio.data = lead.fio
+        # form.tovar.default = lead.tovar
+        form.price.data = lead.price
+        form.contact.data = lead.contact
+        form.address.data = lead.address
+        form.delivery_price.data = lead.delivery_price
+        form.cost_price.data = lead.cost_price
+        form.track.data = lead.track
+        form.status.data = lead.status
+    return render_template('client_edit.html', title='Изменить данные клиента',
+                           form=form)
+
+@app.route("/clients_manager/<int:lead_id>/del", methods=['GET', 'POST'])
+@login_required
+def delete_lead(lead_id):
+    lead = Lead.query.get_or_404(lead_id)
+    if lead.author != current_user:
+        abort(403)
+    db.session.delete(lead)
+    db.session.commit()
+    flash('Клиент удалён!', 'success')
+    return redirect(url_for('add_client'))
+
+@app.route('/tovar_manager', methods=['GET', 'POST'])
+@login_required
+def add_tovar():
+    form = AddTovarForm()
+    if form.validate_on_submit():
+        tv = Tovar(tovar_name = form.tovar_name.data, tovar_cost_price = form.tovar_cost_price.data, tovar_price = form.tovar_price.data, user_id = current_user.id)
+        db.session.add(tv)
+        db.session.commit()
+        flash('Товар успешно добавлен!')
+        return redirect(url_for('add_tovar'))
+    return render_template('tovar_manager.html', title='Менеджер товаров', form=form)
+
+@app.route("/tovar_manager/<int:tovar_id>/edit", methods=['GET', 'POST'])
+@login_required
+def update_tovar(tovar_id):
+    tv = Tovar.query.get_or_404(tovar_id)
+    if tv.author != current_user:
+        abort(403)
+    form = AddTovarForm()
+    if form.validate_on_submit():
+        tv.tovar_name = form.tovar_name.data
+        tv.tovar_cost_price = form.tovar_cost_price.data
+        tv.tovar_price = form.tovar_price.data
+        db.session.commit()
+        flash('Товар отредактирован!', 'success')
+        return redirect(url_for('add_tovar'))
+    elif request.method == 'GET':
+        form.tovar_name.data = tv.tovar_name
+        form.tovar_cost_price.data = tv.tovar_cost_price
+        form.tovar_price.data = tv.tovar_price
+    return render_template('tovar_manager.html', title='Изменить данные товара',
+                           form=form)
+
+@app.route("/tovar_manager/<int:tovar_id>/del", methods=['GET', 'POST'])
+@login_required
+def delete_tovar(tovar_id):
+    tv = Tovar.query.get_or_404(tovar_id)
+    if tv.author != current_user:
+        abort(403)
+    db.session.delete(tv)
+    db.session.commit()
+    flash('Товар удалён!', 'success')
+    return redirect(url_for('add_tovar'))

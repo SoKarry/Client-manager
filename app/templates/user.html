@@ -4,14 +4,14 @@
     <table>
         <tr valign="top">
             <td>
-                <h1>User: {{ user.username }}</h1>
+                <h2>Привет, {{ user.username }}</h2>
                 {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-                {% if user.last_seen %}<p>Последний раз заходил: {{ user.last_seen }}</p>{% endif %}
+                {% if user.last_seen %}<p>Последний вход: {{ user.last_seen }}</p>{% endif %}
             </td>
-            {% if user == current_user %}
-            <p><a href="{{ url_for('edit_profile') }}">Изменить профиль</a></p>
-            {% endif %}
         </tr>
     </table>
-    ...
+    {% if user == current_user %}
+    <a class="btn btn-secondary" href="{{ url_for('edit_profile') }}">Настройки компании</a>
+    <a class="btn btn-secondary" href="{{ url_for('add_tovar') }}">Добавить товар</a>
+    {% endif %}
 {% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <center><h1>Менеджер товаров</h1></center>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <hr />
+		<div class="form-row text-center align-items-center">
+			<div class="col">
+				{{ form.tovar_name.label(class="form-control-label") }}
+                    {% if form.tovar_name.errors %}
+                        {{ form.tovar_name(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.tovar_name(class="form-control") }}
+                    {% endif %}
+			</div>
+			<div class="col">
+				{{ form.tovar_cost_price.label(class="form-control-label") }}
+                    {% if form.tovar_cost_price.errors %}
+                        {{ form.tovar_cost_price(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.tovar_cost_price(class="form-control") }}
+                    {% endif %}
+			</div>
+			<div class="col">
+				{{ form.tovar_price.label(class="form-control-label") }}
+                    {% if form.tovar_price.errors %}
+                        {{ form.tovar_price(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.tovar_price(class="form-control") }}
+                    {% endif %}
+			</div>
+                <H5 style="margin-top: 2.5%">{{ form.submit() }}</H5>
+			</div>
+        <hr />
+	  </div>
+	</form>
+        <p>
+        <table id="table-id" border="1" width="100%" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Себестоимость</th>
+                    <th>Цена</th>
+                    <th>Прибыль</th>
+                    <th>Ред.</th>
+                    <th>Del</th>
+                </tr>
+            </thead>
+        {% for tovar in current_user.tovars %}
+            <tr>
+                <td>{{ tovar.tovar_name }}</td>
+                <td>{{ tovar.tovar_cost_price }}</td>
+                <td>{{ tovar.tovar_price }}</td>
+                <td>{{ tovar.tovar_price-tovar.tovar_cost_price }}</td>
+                <td><a href="{{ url_for('update_tovar', tovar_id=tovar.id) }}">✎</a></td>
+                <td><a href="{{ url_for('delete_tovar', tovar_id=tovar.id) }}">❌</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    </p>
+<script>new Tablesort(document.getElementById('table-id'));</script>
+{% endblock %}
