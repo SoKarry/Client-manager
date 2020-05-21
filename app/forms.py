@@ -29,6 +29,13 @@ class RegistrationForm(FlaskForm):
 class EditProfileForm(FlaskForm):
     username = StringField('Логин', validators=[DataRequired()])
     about_me = TextAreaField('Для заметок: ', validators=[Length(min=0, max=140)])
+    comp_name = StringField('Название компании', validators=[Length(min=0, max=60)])
+    comp_bill = IntegerField('Счёт')
+    bank_name = StringField('Название банка')
+    cor_bill = IntegerField('Корреспондентский счёт')
+    INN = IntegerField('ИНН')
+    KPP = IntegerField('КПП')
+    BIK = IntegerField('БИК')
     submit = SubmitField('Изменить!')
 
     def __init__(self, original_username, *args, **kwargs):

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div align=center>
+    <br>
+    <table cellspacing=0 cellpadding=4 width=680 border=1>
+        <tbody>
+            <tr>
+                <td valign=bottom width="30%">
+                    <p align=right>Извещение</p>
+                    <p align=right>&nbsp;</p>
+                    <p align=right>&nbsp;</p>
+                    <p align=right>&nbsp;</p>
+                    <p align=right>&nbsp;</p>
+                    <p align=right>&nbsp;</p>
+                    <p align=right>&nbsp;</p>
+                    <p align=right>Кассир</p>
+                </td>
+                <td width="70%">
+                    <table cellspacing=0 cellpadding=2 width="100%" border=0>
+                        <tbody>
+                            <tr>
+                                <td colspan=3><strong>Получатель платежа</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan=3>Наименование:&nbsp; {{ current_user.comp_name }} </td>
+                            </tr>
+                            <tr>
+                                <td>Счёт: {{ current_user.comp_bill }}</td>
+                                <td>ИНН: {{ current_user.INN }}</td>
+                                <td>КПП: {{ current_user.KPP }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan=3>Наименование банка: {{ current_user.bank_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Кор. счет: {{ current_user.cor_bill }}</td>
+                                <td colspan=2>БИК: {{ current_user.BIK }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table cellspacing=0 cellpadding=2 width="100%" border=0>
+                        <tbody>
+                            <tr>
+                                <td><strong>Плательщик</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="inline_edit">{{ ld.fio }}</td>
+                            </tr>
+                            <tr>
+                                <td class="inline_edit">{{ ld.address }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table cellspacing=0 cellpadding=2 width="100%" border=1>
+                        <tbody>
+                        <tr>
+                            <td><div align=center>Назначение платежа</div></td>
+                            <td><div align=center>Дата</div></td>
+                            <td><div align=center>Сумма</div></td>
+                        </tr>
+                        <tr>
+                            <td><div align=center class="inline_edit">Оплата заказа #{{ ld.id }}. Без НДС.</div></td>
+                            <td><div align=center>{{ ld.timestamp.strftime("%d.%m.%Y") }}</div></td>
+                            <td><div align=center class="inline_edit">{{ ld.price + (ld.delivery_price if ld.profit == (ld.price - ld.cost_price) else 0) }}</div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p>Подпись плательщика:</p>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

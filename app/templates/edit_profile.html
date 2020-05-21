@@ -1,23 +1,111 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Настройки</h1>
+    <center><h1>Настройки</h1></center>
+    <hr \>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-            {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.about_me.label }}<br>
-            {{ form.about_me(cols=50, rows=4) }}<br>
-            {% for error in form.about_me.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
+        <div class="form-row text-center justify-content-center">
+			<div class="form-group col-xs-9">
+				{{ form.username.label(class="form-control-label") }}
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control") }}
+                    {% endif %}
+			</div>
+            <div class="form-group col-md-4">
+				{{ form.comp_name.label(class="form-control-label") }}
+                    {% if form.comp_name.errors %}
+                        {{ form.comp_name(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.comp_name(class="form-control") }}
+                    {% endif %}
+			</div>
+            <div class="form-group col-md-4">
+				{{ form.bank_name.label(class="form-control-label") }}
+                    {% if form.bank_name.errors %}
+                        {{ form.bank_name(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.bank_name(class="form-control") }}
+                    {% endif %}
+			</div>
+        </div>
+        <div class="form-row text-center justify-content-center">
+            <div class="form-group col-sm-3">
+				{{ form.comp_bill.label(class="form-control-label") }}
+                    {% if form.comp_bill.errors %}
+                        {{ form.comp_bill(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.comp_bill(class="form-control") }}
+                    {% endif %}
+			</div>
+            <div class="form-group col-sm-3">
+				{{ form.cor_bill.label(class="form-control-label") }}
+                    {% if form.cor_bill.errors %}
+                        {{ form.cor_bill(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.cor_bill(class="form-control") }}
+                    {% endif %}
+			</div>
+        </div>
+        <div class="form-row text-center justify-content-center">
+            <div class="form-group col-xs-6">
+				{{ form.INN.label(class="form-control-label") }}
+                    {% if form.INN.errors %}
+                        {{ form.INN(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.INN(class="form-control") }}
+                    {% endif %}
+			</div>
+            <div class="form-group col-xs-6">
+				{{ form.KPP.label(class="form-control-label") }}
+                    {% if form.KPP.errors %}
+                        {{ form.KPP(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.KPP(class="form-control") }}
+                    {% endif %}
+			</div>
+            <div class="form-group col-xs-6">
+				{{ form.BIK.label(class="form-control-label") }}
+                    {% if form.BIK.errors %}
+                        {{ form.BIK(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.BIK(class="form-control") }}
+                    {% endif %}
+			</div>
+        </div>
+        <div class="form-row text-center justify-content-center">
+            <div class="form-group col-xl-4">
+				{{ form.about_me.label(class="form-control-label") }}
+                    {% if form.about_me.errors %}
+                        {{ form.about_me(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                        </div>
+                    {% else %}
+                        {{ form.about_me(class="form-control") }}
+                    {% endif %}
+			</div>
+        </div>
+        <center>
+            <p>{{ form.submit(class="btn btn-primary", type="submit") }}</p>
+        </center>
+
     </form>
 {% endblock %}

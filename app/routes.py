@@ -72,12 +72,26 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
+        current_user.comp_name = form.comp_name.data
+        current_user.comp_bill = form.comp_bill.data
+        current_user.bank_name = form.bank_name.data
+        current_user.cor_bill = form.cor_bill.data
+        current_user.INN = form.INN.data
+        current_user.KPP = form.KPP.data
+        current_user.BIK = form.BIK.data
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
+        form.comp_name.data = current_user.comp_name
+        form.comp_bill.data = current_user.comp_bill
+        form.bank_name.data = current_user.bank_name
+        form.cor_bill.data = current_user.cor_bill
+        form.INN.data = current_user.INN
+        form.KPP.data = current_user.KPP
+        form.BIK.data = current_user.BIK
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
 
@@ -184,3 +198,11 @@ def delete_tovar(tovar_id):
     db.session.commit()
     flash('Товар удалён!', 'success')
     return redirect(url_for('add_tovar'))
+
+@app.route('/check/<int:lead_id>', methods=['GET', 'POST'])
+@login_required
+def get_check(lead_id):
+    ld = Lead.query.get_or_404(lead_id)
+    if ld.author != current_user:
+        abort(403)
+    return render_template('check.html', title='Чек', ld=ld)
